@@ -1,0 +1,50 @@
+<html>
+	<head>
+		<title>Our First 3D Client</title>
+        <link rel="stylesheet" href="style.css">
+
+    <!-- Drawables -->
+    <script type="text/javascript" src="drawables/quadrilateral.js"></script>
+    <script type="text/javascript" src="drawables/pacman.js"></script>
+
+    <!-- The game stuff -->
+		<script type="text/javascript" src="js/shaders.js"></script>
+		<script type="text/javascript" src="js/engine.js"></script>
+
+    <!-- Lib files -->
+    <script type="text/javascript" src="lib/spidergl.js"></script>
+		<script type="text/javascript" src="lib/spidergl-config.js"></script>
+		<script type="text/javascript" src="lib/pceng.js"></script>
+		<script type="text/javascript" src="lib/pceng_config.js"></script>
+		<script type="text/javascript" src="lib/pceng_glue.js"></script>
+
+	</head>
+	<body>
+    <ul class="combar">
+        <li>Instructions</li>
+        <li>[w]: move forward<br>
+            [s]: move backward<br>
+            [a]: steer left<br>
+            [d]: steer right<br></li>
+    </ul>
+		<center>
+			<h2> Pacman </h2>
+			<div>
+			  <hr/>
+			  <canvas id="pc-canvas" width="600" height="400" style="border:1px solid gray;"></canvas>
+			  <hr/>
+			</div>
+			<div>
+			  <h3>Log</h3>
+			  <textarea id="pceng-log" rows="4" cols="80"></textarea>
+			</div>
+			<div>
+			  <div id="pceng-fps">FPS</div>
+			  <div id="pceng-latency">Latency</div>
+			  <div id="pceng-server-clock-delta">Server Clock Delta</div>
+			  <div id="pceng-server-time">Server Time</div>
+			</div>
+			<hr/>
+		</center>
+	</body>
+</html>
