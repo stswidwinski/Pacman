@@ -106,6 +106,7 @@ PCENGClient.drawScene = function (gl) {
 
 	var width = this.ui.width;
 	var height = this.ui.height
+	var ratio = width / height;
 
 	gl.viewport(0, 0, width, height);
 
@@ -116,18 +117,21 @@ PCENGClient.drawScene = function (gl) {
 	gl.enable(gl.DEPTH_TEST);
 	gl.useProgram(this.uniformShader);
 
-	// Setup projection matrix
-	var ratio = width / height; //line 229, Listing 4.1{
-	var bbox = this.game.race.bbox;
-	var winW = (bbox[3] - bbox[0]);
-	var winH = (bbox[5] - bbox[2]);
-	winW = winW * ratio * (winH / winW);
-	var P = SglMat4.ortho([-winW / 2, -winH / 2, 0.0], [winW / 2, winH / 2, 21.0]);
-	gl.uniformMatrix4fv(this.uniformShader.uProjectionMatrixLocation, false, P);
+  // Setup the cameras
+	this.stack.loadIdentity();
+  var currentCamera = this.cameras[this.currentCamera];
+  if (currentCamera.setProjection) {
+    currentCamera.setProjection(gl);
+  } else {
+    // the default perspective is just the projection matrix
+    gl.uniformMatrix4fv(
+        this.uniformShader.uProjectionMatrixLocation, 
+        false, 
+        SglMat4.perspective(3.14/4, ratio, 1, 200));
+  }
+	currentCamera.setView(this.stack, this.myFrame());
 
-	var stack = this.stack;
-	stack.loadIdentity(); //line 238}
-	// create the inverse of V //line 239, Listing 4.2{
+  var stack = this.stack;
 	var invV = SglMat4.lookAt([0, 20, 0], [0, 0, 0], [1, 0, 0]);
 	stack.multiply(invV);
 	stack.push();//line 242
@@ -161,7 +165,7 @@ PCENGClient.initMotionKeyHandlers = function () {
 
 // PCENG Client Events
 /***********************************************************************/
-PCENGClient.onInitialize = function () {// line 290, Listing 4.2{
+PCENGClient.onInitialize = function () {
 	var gl = this.ui.gl;
 	PCENG.log("SpiderGL Version : " + SGL_VERSION_STRING + "\n");
 	this.game.player.color = [1.0, 0.0, 0.0, 1.0];
@@ -170,6 +174,7 @@ PCENGClient.onInitialize = function () {// line 290, Listing 4.2{
 	this.stack = new SglMatrixStack();
 	this.initializeObjects(gl); //LINE 297}
 	this.uniformShader = new uniformShader(gl);
+  this.initializeCameras();
 };
 
 PCENGClient.onTerminate = function () {};
@@ -209,19 +214,35 @@ PCENGClient.onPlayerLeave = function (playerID) {
 
 PCENGClient.onKeyDown = function (keyCode, event) {
 	this.carMotionKey[keyCode] && this.carMotionKey[keyCode](true);
+
+  this.cameras[this.currentCamera].keyDown(keyCode);
 };
 
 PCENGClient.onKeyUp = function (keyCode, event) {
 	this.carMotionKey[keyCode] && this.carMotionKey[keyCode](false);
+
+  if (keyCode == "2") {
+    this.nextCamera();
+  } else if (keyCode == "1") {
+    this.prevCamera();
+  }
+
+  this.cameras[this.currentCamera].keyUp(keyCode);
 };
 
 PCENGClient.onKeyPress = function (keyCode, event) {};
 
-PCENGClient.onMouseButtonDown = function (button, x, y, event) {};
+PCENGClient.onMouseButtonDown = function (button, x, y, event) {
+  this.cameras[this.currentCamera].mouseButtonDown(x,y);
+};
 
-PCENGClient.onMouseButtonUp = function (button, x, y, event) {};
+PCENGClient.onMouseButtonUp = function (button, x, y, event) {
+  this.cameras[this.currentCamera].mouseButtonUp(x, y);
+};
 
-PCENGClient.onMouseMove = function (x, y, event) {};
+PCENGClient.onMouseMove = function (x, y, event) {
+  this.cameras[this.currentCamera].mouseMove(x,y);
+};
 
 PCENGClient.onMouseWheel = function (delta, x, y, event) {};
 

@@ -2,19 +2,21 @@
 	<head>
 		<title>Our First 3D Client</title>
         <link rel="stylesheet" href="style.css">
-
+    <!-- Spider GL engine -->
+    <script type="text/javascript" src="lib/spidergl.js"></script>
+		<script type="text/javascript" src="lib/spidergl-config.js"></script>
+	
     <!-- Drawables -->
     <script type="text/javascript" src="drawables/quadrilateral.js"></script>
     <script type="text/javascript" src="drawables/pacman.js"></script>
 
     <!-- The game stuff -->
-		<script type="text/javascript" src="js/shaders.js"></script>
 		<script type="text/javascript" src="js/engine.js"></script>
+    <script type="text/javascript" src="js/cameras.js"></script>
+		<script type="text/javascript" src="js/shaders.js"></script>
 
     <!-- Lib files -->
-    <script type="text/javascript" src="lib/spidergl.js"></script>
-		<script type="text/javascript" src="lib/spidergl-config.js"></script>
-		<script type="text/javascript" src="lib/pceng.js"></script>
+	  <script type="text/javascript" src="lib/pceng.js"></script>
 		<script type="text/javascript" src="lib/pceng_config.js"></script>
 		<script type="text/javascript" src="lib/pceng_glue.js"></script>
 
@@ -25,7 +27,15 @@
         <li>[w]: move forward<br>
             [s]: move backward<br>
             [a]: steer left<br>
-            [d]: steer right<br></li>
+            [d]: steer right<br>
+            [2]: ++mode<br>
+            [1]: --mode<br>
+            <br>
+            Modes:<br>
+            1: First Person Camera <br>
+            2: Overhead Camera<br>
+            3: Observer Camera <br>
+        </li>
     </ul>
 		<center>
 			<h2> Pacman </h2>
