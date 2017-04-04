@@ -76,24 +76,30 @@ PCENGClient.createObjects = function () {
 
 //	this.track = new Track(this.game.race.track);
 	var bbox = this.game.race.bbox;
-	var quad = [bbox[0], bbox[1] - 0.01, bbox[2],
+	var quad = [
+    bbox[0], bbox[1] - 0.01, bbox[2],
 		bbox[3], bbox[1] - 0.01, bbox[2],
 		bbox[3], bbox[1] - 0.01, bbox[5],
 		bbox[0], bbox[1] - 0.01, bbox[5]
 	];
 
 	this.ground = new Quadrilateral(quad);
+  this.pacman = new Pacman_body();
 
-//	var gameBuildings = this.game.race.buildings;
-//	this.buildings = new Array(gameBuildings.length);
-//	for (var i = 0; i < gameBuildings.length; ++i) {
-//		this.buildings[i] = new Building(gameBuildings[i]);
-//	}
+  var walls = this.game.race.walls;
+  this.walls = new Array(walls.length);
+  for (var i = 0; i < walls.length; i++) {
+    this.walls[i] = new Wall(walls[i]);
+  }
 };
 
 PCENGClient.createBuffers = function (gl) {
-//	this.createObjectBuffers(gl, this.cube);
 	this.createObjectBuffers(gl, this.ground);
+	this.createObjectBuffers(gl, this.pacman);
+
+  for (var i = 0; i < this.walls.length; i++) {
+    this.createObjectBuffers(gl, this.walls[i]);
+  }
 };
 
 PCENGClient.initializeObjects = function (gl) {
@@ -122,6 +128,8 @@ PCENGClient.drawScene = function (gl) {
   var currentCamera = this.cameras[this.currentCamera];
   if (currentCamera.setProjection) {
     currentCamera.setProjection(gl);
+    var invV = SglMat4.lookAt([0, 20, 0], [0, 0, 0], [1, 0, 0]);
+	  this.stack.multiply(invV);
   } else {
     // the default perspective is just the projection matrix
     gl.uniformMatrix4fv(
@@ -132,12 +140,17 @@ PCENGClient.drawScene = function (gl) {
 	currentCamera.setView(this.stack, this.myFrame());
 
   var stack = this.stack;
-	var invV = SglMat4.lookAt([0, 20, 0], [0, 0, 0], [1, 0, 0]);
-	stack.multiply(invV);
-	stack.push();//line 242
+  stack.push();
+
+  this.drawPacman(gl);
 
   gl.uniformMatrix4fv(this.uniformShader.uModelViewMatrixLocation, false, stack.matrix);
 	this.drawObject(gl, this.ground, [0.3, 0.7, 0.2, 1.0], [0, 0, 0, 1.0]);
+  
+  var walls = this.walls;
+  for (var i = 0; i < walls.length; i++) {
+    this.drawObject(gl, walls[i], [0.2, 0.2, 0.2, 1.0], [0.1, 0.1, 0.1, 1.0]);
+  }
 
 	gl.useProgram(null);
 	gl.disable(gl.DEPTH_TEST);
@@ -213,7 +226,10 @@ PCENGClient.onPlayerLeave = function (playerID) {
 };
 
 PCENGClient.onKeyDown = function (keyCode, event) {
-	this.carMotionKey[keyCode] && this.carMotionKey[keyCode](true);
+  // don't move Pacman if we are in the observer camera!
+  if (this.currentCamera != 2) {
+	  this.carMotionKey[keyCode] && this.carMotionKey[keyCode](true);
+  }
 
   this.cameras[this.currentCamera].keyDown(keyCode);
 };

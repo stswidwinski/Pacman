@@ -6,3 +6,4 @@ document.write('<script type = "text/javascript" src="drawables/sphere_latlong.j
 document.write('<script type = "text/javascript" src="drawables/sphere_subd.js"></script>');
 document.write('<script type = "text/javascript" src="drawables/tetrahedron.js"></script>');
 document.write('<script type = "text/javascript" src="drawables/pacman.js"></script>');
+document.write('<script type = "text/javascript" src="drawables/wall.js"></script>');
