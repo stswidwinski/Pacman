@@ -11,10 +11,7 @@ function start() {
   gl = canvas.getContext("experimental-webgl");
   
   // CHANGE HERE FOR DIFFERENT DRAWABLE
-  drawable = new Wall({
-    blh: [-2, -1, -1],
-    trf: [2, 3, 1] 
-  }); // drawable name
+  drawable = new Sphere(2);
 
   if (gl) {
     initialize(gl, drawable);

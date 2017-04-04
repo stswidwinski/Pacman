@@ -86,20 +86,19 @@ PCENGClient.createObjects = function () {
 	this.ground = new Quadrilateral(quad);
   this.pacman = new Pacman_body();
 
-  var walls = this.game.race.walls;
-  this.walls = new Array(walls.length);
-  for (var i = 0; i < walls.length; i++) {
-    this.walls[i] = new Wall(walls[i]);
-  }
+  this.walls = this.game.race.walls;
+  this.cube = new Cube();
+
+  // for all dots, keep a single sphere in mem.
+  this.dots = this.game.race.dots;
+  this.sphere = new Sphere(1.0);
 };
 
 PCENGClient.createBuffers = function (gl) {
 	this.createObjectBuffers(gl, this.ground);
 	this.createObjectBuffers(gl, this.pacman);
-
-  for (var i = 0; i < this.walls.length; i++) {
-    this.createObjectBuffers(gl, this.walls[i]);
-  }
+	this.createObjectBuffers(gl, this.sphere);
+  this.createObjectBuffers(gl, this.cube);
 };
 
 PCENGClient.initializeObjects = function (gl) {
@@ -147,10 +146,13 @@ PCENGClient.drawScene = function (gl) {
   gl.uniformMatrix4fv(this.uniformShader.uModelViewMatrixLocation, false, stack.matrix);
 	this.drawObject(gl, this.ground, [0.3, 0.7, 0.2, 1.0], [0, 0, 0, 1.0]);
   
-  var walls = this.walls;
-  for (var i = 0; i < walls.length; i++) {
-    this.drawObject(gl, walls[i], [0.2, 0.2, 0.2, 1.0], [0.1, 0.1, 0.1, 1.0]);
-  }
+//  var walls = this.walls;
+//  for (var i = 0; i < walls.length; i++) {
+//    this.drawObject(gl, walls[i], [0.2, 0.2, 0.2, 1.0], [0.1, 0.1, 0.1, 1.0]);
+//  }
+
+  this.drawWalls(gl);
+  this.drawDots(gl);
 
 	gl.useProgram(null);
 	gl.disable(gl.DEPTH_TEST);
