@@ -146,11 +146,6 @@ PCENGClient.drawScene = function (gl) {
   gl.uniformMatrix4fv(this.uniformShader.uModelViewMatrixLocation, false, stack.matrix);
 	this.drawObject(gl, this.ground, [0.3, 0.7, 0.2, 1.0], [0, 0, 0, 1.0]);
   
-//  var walls = this.walls;
-//  for (var i = 0; i < walls.length; i++) {
-//    this.drawObject(gl, walls[i], [0.2, 0.2, 0.2, 1.0], [0.1, 0.1, 0.1, 1.0]);
-//  }
-
   this.drawWalls(gl);
   this.drawDots(gl);
 

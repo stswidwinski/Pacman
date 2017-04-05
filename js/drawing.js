@@ -17,7 +17,10 @@ PCENGClient.drawPacman = function(gl) {
 
 PCENGClient.drawDots = function(gl) {
   var stack = this.stack;
+  this.dots = this.game.race.dots;
   for (var i = 0; i < this.dots.length; i++) {
+    if (this.dots[i].eaten) continue;
+
     stack.push();
     stack.multiply(SglMat4.translation(this.dots[i].position));
     var size = this.dots[i].size;
