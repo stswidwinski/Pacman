@@ -1,4 +1,4 @@
-function Pacman_body () {
+function Pacman_body (radius) {
   this.name = "pacman_body";
   
   var azi_div = 30;
@@ -7,7 +7,7 @@ function Pacman_body () {
   var mouth_azi_width = 2 * 4;
   this.mouth_azi_start = mouth_azi_width / 2 - 1;
   this.mouth_azi_end = azi_div / 2 - mouth_azi_width / 2 + 1;
-  var mouth_ele_width = 2 * 4;
+  var mouth_ele_width = 2 * 3;
   this.mouth_ele_start = ele_div / 2 - mouth_ele_width / 2 - 1;
   this.mouth_ele_end = ele_div / 2 + mouth_ele_width / 2 + 1;
 
@@ -17,7 +17,6 @@ function Pacman_body () {
 //	this.vertices = new Float32Array(3 * (azi_div * (ele_div - 1) + 2));
   var vertices = [];
 	
-	var radius = 2.0;
   var azimuth;
   var azimuthStep = 2 * Math.PI / azi_div;
   var elevation;

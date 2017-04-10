@@ -15,6 +15,11 @@ PCENGClient.myFrame = function () {
 	return this.game.state.players.me.dynamicState.frame;
 }
 
+PCENGClient.goatsFrame = function (goatIndex) {
+  return [];
+  //return this.game.state.players.goats[goatIndex].dynamicState.frame;
+}
+
 // PCENG Client Internals
 /***********************************************************************/
 PCENGClient.createObjectBuffers = function (gl, obj) {
@@ -71,10 +76,6 @@ PCENGClient.drawObject = function (gl, obj, fillColor, lineColor) {
 };
 
 PCENGClient.createObjects = function () {
-//	this.cube = new Cube(10);
-//	...
-
-//	this.track = new Track(this.game.race.track);
 	var bbox = this.game.race.bbox;
 	var quad = [
     bbox[0], bbox[1] - 0.01, bbox[2],
@@ -84,10 +85,11 @@ PCENGClient.createObjects = function () {
 	];
 
 	this.ground = new Quadrilateral(quad);
-  this.pacman = new Pacman_body();
+  this.pacman = new Pacman_body(this.game.race.pacmanSize);
 
   this.walls = this.game.race.walls;
   this.cube = new Cube();
+  this.halfsphere = new HalfSphere(1.0);
 
   // for all dots, keep a single sphere in mem.
   this.dots = this.game.race.dots;
@@ -99,6 +101,7 @@ PCENGClient.createBuffers = function (gl) {
 	this.createObjectBuffers(gl, this.pacman);
 	this.createObjectBuffers(gl, this.sphere);
   this.createObjectBuffers(gl, this.cube);
+  this.createObjectBuffers(gl, this.halfsphere);
 };
 
 PCENGClient.initializeObjects = function (gl) {
@@ -107,6 +110,10 @@ PCENGClient.initializeObjects = function (gl) {
 };
 
 PCENGClient.drawScene = function (gl) {
+  var newTime = new Date().getTime();
+  this.dt = newTime - this.time;
+  this.time = newTime;
+
 	var pos = this.myPos();
 
 	var width = this.ui.width;
@@ -148,6 +155,7 @@ PCENGClient.drawScene = function (gl) {
   
   this.drawWalls(gl);
   this.drawDots(gl);
+  this.drawGoats(gl);
 
 	gl.useProgram(null);
 	gl.disable(gl.DEPTH_TEST);
@@ -182,9 +190,11 @@ PCENGClient.onInitialize = function () {
 	//PCENG.GamePlayers.addOpponent();
 	this.initMotionKeyHandlers();
 	this.stack = new SglMatrixStack();
-	this.initializeObjects(gl); //LINE 297}
+	this.initializeObjects(gl);
 	this.uniformShader = new uniformShader(gl);
   this.initializeCameras();
+  this.goatsInGame = 1;
+  this.time = new Date().getTime();
 };
 
 PCENGClient.onTerminate = function () {};

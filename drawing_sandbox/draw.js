@@ -11,7 +11,7 @@ function start() {
   gl = canvas.getContext("experimental-webgl");
   
   // CHANGE HERE FOR DIFFERENT DRAWABLE
-  drawable = new Sphere(2);
+  drawable = new HalfSphere(2);
 
   if (gl) {
     initialize(gl, drawable);

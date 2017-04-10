@@ -8,3 +8,4 @@ document.write('<script type = "text/javascript" src="drawables/tetrahedron.js">
 document.write('<script type = "text/javascript" src="drawables/pacman.js"></script>');
 document.write('<script type = "text/javascript" src="drawables/wall.js"></script>');
 document.write('<script type = "text/javascript" src="drawables/sphere.js"></script>');
+document.write('<script type = "text/javascript" src="drawables/half_sphere.js"></script>');
