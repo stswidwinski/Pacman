@@ -54,6 +54,20 @@ PCENGClient.drawDots = function(gl) {
   }
 }
 
+PCENGClient.drawWaypoints = function(gl) {
+  var stack = this.stack;
+  this.waypoints = this.game.state.players.goats[0].waypoints;
+  for (var i = 0; i < this.waypoints.length; i++) {
+    stack.push();
+    stack.multiply(SglMat4.translation(this.waypoints[i]));
+    var size = 4;
+    stack.multiply(SglMat4.scaling([size, size, size]));
+    gl.uniformMatrix4fv(this.uniformShader.uModelViewMatrixLocation, false, stack.matrix);
+    this.drawObject(gl, this.sphere, [0.2, 0.2, 0.8, 1.0], [0.2, 0, 0.8, 0.8]);
+    stack.pop();
+  }
+}
+
 PCENGClient.drawWalls = function(gl) {
   var stack = this.stack;
   for (var i = 0; i < this.walls.length; i++) {
@@ -172,14 +186,12 @@ PCENGClient.drawGoats = function(gl) {
     stack.pop();  
   };
 
-  stack.push();
-  stack.multiply(SglMat4.scaling([.75, .75, .75]));
-
   for (var i = 0; i < this.game.race.goatsNumber; i++) {
+    stack.push();
     stack.multiply(this.goatsFrame(i));
     drawLegs();
     drawTorso();
     drawHead();
+    stack.pop();
   }
- stack.pop();
 }

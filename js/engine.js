@@ -16,8 +16,7 @@ PCENGClient.myFrame = function () {
 }
 
 PCENGClient.goatsFrame = function (goatIndex) {
-  return [];
-  //return this.game.state.players.goats[goatIndex].dynamicState.frame;
+  return this.game.state.players.goats[goatIndex].dynamicState.frame;
 }
 
 // PCENG Client Internals
@@ -155,6 +154,7 @@ PCENGClient.drawScene = function (gl) {
   
   this.drawWalls(gl);
   this.drawDots(gl);
+//  this.drawWaypoints(gl);
   this.drawGoats(gl);
 
 	gl.useProgram(null);
@@ -187,7 +187,6 @@ PCENGClient.onInitialize = function () {
 	var gl = this.ui.gl;
 	PCENG.log("SpiderGL Version : " + SGL_VERSION_STRING + "\n");
 	this.game.player.color = [1.0, 0.0, 0.0, 1.0];
-	//PCENG.GamePlayers.addOpponent();
 	this.initMotionKeyHandlers();
 	this.stack = new SglMatrixStack();
 	this.initializeObjects(gl);
