@@ -3,6 +3,7 @@ var PCENGClient = PCENGClient || {};
 PCENGClient.drawPacman = function(gl) {
   var stack = this.stack;
   var pacmanSize = this.game.race.pacmanSize;
+  var pink = [1.0, 57/255.0, 143/255.0, 1.0];
 
   stack.push();
   stack.multiply(this.myFrame());
@@ -12,7 +13,7 @@ PCENGClient.drawPacman = function(gl) {
   stack.push()
   stack.multiply(SglMat4.rotationAngleAxis(sglDegToRad(-90), [1, 0 , 0]));
   gl.uniformMatrix4fv(this.uniformShader.uModelViewMatrixLocation, false, stack.matrix);
-  this.drawObject(gl, this.pacman, [1.0, 1.0, 0.2, 1.0], [0.1, 0.1, 0.1, 1.0]);
+  this.drawObject(gl, this.pacman, pink, [0.1, 0.1, 0.1, 1.0]);
   stack.pop();
 
   // draw the eyes of pacman
@@ -49,7 +50,7 @@ PCENGClient.drawDots = function(gl) {
     var size = this.dots[i].size;
     stack.multiply(SglMat4.scaling([size, size, size]));
     gl.uniformMatrix4fv(this.uniformShader.uModelViewMatrixLocation, false, stack.matrix);
-    this.drawObject(gl, this.sphere, [0.4, 0, 0, 0.8], [0.5, 0, 0, 0.8]);
+    this.drawObject(gl, this.sphere, [1.0, 201/255.0, 73/255.0, 1.0], [1.0, 201/255.0, 73/255.0, 1.0]);
     stack.pop();
   }
 }
@@ -83,7 +84,7 @@ PCENGClient.drawWalls = function(gl) {
     stack.multiply(SglMat4.translation([moveX, yLen/2.0, moveZ]));
     stack.multiply(SglMat4.scaling([xLen, yLen, zLen]));
     gl.uniformMatrix4fv(this.uniformShader.uModelViewMatrixLocation, false, stack.matrix);
-    this.drawObject(gl, this.cube, [0.2, 0.2, 0.2, 1.8], [0.1, 0.1, 0.1, 1.0]);
+    this.drawObject(gl, this.cube, [16.0/255, 68/255.0, 0.0, 0.7], [0.1, 0.1, 0.1, 1.0]);
     stack.pop();
   }
 }

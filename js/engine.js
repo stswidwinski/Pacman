@@ -151,7 +151,7 @@ PCENGClient.drawScene = function (gl) {
   this.drawPacman(gl);
 
   gl.uniformMatrix4fv(this.uniformShader.uModelViewMatrixLocation, false, stack.matrix);
-	this.drawObject(gl, this.ground, [0.3, 0.7, 0.2, 1.0], [0, 0, 0, 1.0]);
+	this.drawObject(gl, this.ground, [0.2, 0.2, 0.3, 1.0], [0.2, 0.2, 0.3, 1.0]);
   
   this.drawWalls(gl);
   this.drawDots(gl);
