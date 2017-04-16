@@ -1,4 +1,5 @@
 /// Global PCENG Client
+//
 // ID 4.0
 /***********************************************************************/
 var PCENGClient = PCENGClient || {};
@@ -192,7 +193,6 @@ PCENGClient.onInitialize = function () {
 	this.initializeObjects(gl);
 	this.uniformShader = new uniformShader(gl);
   this.initializeCameras();
-  this.goatsInGame = 1;
   this.time = new Date().getTime();
 };
 

@@ -92,8 +92,30 @@ PCENGClient.drawGoats = function(gl) {
   var self = this;
   var stack = this.stack;
   var goatDims = this.game.race.goatDimensions;
+
+  var getGoatColors = function() {
+    var colors = self.goatColors;
+    
+    if (colors) return colors;
+
+    var goatColors = [
+      [192.0/255, 228.0/255, 255.0/255.0, 1.0],
+      [161.0/255, 215.0/255, 255.0/255.0, 1.0],
+      [98.0/255, 188.0/255, 255.0/255.0, 1.0],
+      [10.0/255, 149.0/255, 255.0/255.0, 1.0]
+    ];
+
+    colors = [ ];
+    for (var i = 0; i < self.game.race.goatsNumber; i++) {
+      colors.push(goatColors[Math.floor(Math.random() * goatColors.length)]);
+    }
+
+    self.goatColors = colors;
+    return colors;
+  };
+  var goatColors = getGoatColors();
   
-  var drawHead = function() {
+  var drawHead = function(color) {
     stack.push();
     var height = goatDims.legHeight + goatDims.hoofHeight + goatDims.torsoHeight;
     stack.multiply(SglMat4.translation(
@@ -106,7 +128,7 @@ PCENGClient.drawGoats = function(gl) {
     stack.multiply(SglMat4.scaling([2, goatDims.neckLength, 2]));
 
     gl.uniformMatrix4fv(self.uniformShader.uModelViewMatrixLocation, false, stack.matrix);
-    self.drawObject(gl, self.cube, [0.1, 0.4, 0.6, 1.0], [0.1, 0.1, 0.1, 1.0]);
+    self.drawObject(gl, self.cube, color, [0.0, 0.0, 0.0, 1.0]);
     stack.pop();
 
     stack.push();
@@ -121,26 +143,26 @@ PCENGClient.drawGoats = function(gl) {
     stack.multiply(SglMat4.scaling([goatDims.headSize, goatDims.headSize, goatDims.headSize]));
 
     gl.uniformMatrix4fv(self.uniformShader.uModelViewMatrixLocation, false, stack.matrix);
-    self.drawObject(gl, self.cube, [0.1, 0.4, 0.6, 1.0], [0.1, 0.1, 0.1, 1.0]);
+    self.drawObject(gl, self.cube, color, [0.0, 0.0, 0.0, 1.0]);
     stack.pop();  
   };
 
-  var drawTorso = function () {
+  var drawTorso = function (color) {
     stack.push();
     var height = goatDims.legHeight + goatDims.hoofHeight + goatDims.torsoHeight / 2;
     stack.multiply(SglMat4.translation([0, height, 0]));
     stack.multiply(SglMat4.scaling(
           [goatDims.torsoXwidth, goatDims.torsoHeight, goatDims.torsoZwidth]));
     gl.uniformMatrix4fv(self.uniformShader.uModelViewMatrixLocation, false, stack.matrix);
-    self.drawObject(gl, self.cube, [0.1, 0.4, 0.6, 1.0], [0.1, 0.1, 0.1, 1.0]);
+    self.drawObject(gl, self.cube, color, [0.0, 0.0, 0.0, 1.0]);
     stack.pop();  
   };
 
-  var drawLegs = function() {
+  var drawLegs = function(color) {
     var drawMovedLeg = function(x, z) {
       stack.push();
       stack.multiply(SglMat4.translation([x, 0, z]));
-      drawLeg();
+      drawLeg(color);
       stack.pop();
     }
     var xMove = goatDims.torsoXwidth * (1.0 / 3.5);
@@ -152,7 +174,7 @@ PCENGClient.drawGoats = function(gl) {
     drawMovedLeg(-xMove, -zMove);
  };
 
-  var drawLeg = function() {
+  var drawLeg = function(color) {
     var maxAngle = 45;
     var phase = ((self.time % 1500) / 1500.0 * 360);
     var angle  = Math.cos(sglDegToRad(phase)) * maxAngle;
@@ -162,36 +184,36 @@ PCENGClient.drawGoats = function(gl) {
     stack.multiply(SglMat4.rotationAngleAxis(sglDegToRad(angle), [1, 0, 0]));
     stack.multiply(SglMat4.translation([0, -height, 0]));
 
-    drawHoof();
-    drawUpperLeg();
+    drawHoof(color);
+    drawUpperLeg(color);
 
     stack.pop();
   };
 
-  var drawUpperLeg = function () {
+  var drawUpperLeg = function (color) {
     stack.push();
     stack.multiply(SglMat4.translation([0, goatDims.legHeight/2 + goatDims.hoofHeight, 0]));
     stack.multiply(SglMat4.scaling([.5, goatDims.legHeight, .5]));
     gl.uniformMatrix4fv(self.uniformShader.uModelViewMatrixLocation, false, stack.matrix);
-    self.drawObject(gl, self.cube, [0.1, 0.4, 0.6, 1.0], [0.1, 0.1, 0.1, 1.0]);
+    self.drawObject(gl, self.cube, color, [0.0, 0.0, 0.0, 1.0]);
     stack.pop();  
   };
 
-  var drawHoof = function () {
+  var drawHoof = function (color) {
     stack.push();
     stack.multiply(SglMat4.translation([0, .5, 0]));
     stack.multiply(SglMat4.scaling([1, goatDims.hoofHeight, 1]));
     gl.uniformMatrix4fv(self.uniformShader.uModelViewMatrixLocation, false, stack.matrix);
-    self.drawObject(gl, self.cube, [0.1, 0.4, 0.6, 1.0], [0.1, 0.1, 0.1, 1.0]);
+    self.drawObject(gl, self.cube, color, [0.0, 0.0, 0.0, 1.0]);
     stack.pop();  
   };
 
   for (var i = 0; i < this.game.race.goatsNumber; i++) {
     stack.push();
     stack.multiply(this.goatsFrame(i));
-    drawLegs();
-    drawTorso();
-    drawHead();
-    stack.pop();
+    drawLegs(goatColors[i]);
+    drawTorso(goatColors[i]);
+    drawHead(goatColors[i]);
+    stack.pop(goatColors[i]);
   }
 }
