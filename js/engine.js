@@ -85,7 +85,6 @@ PCENGClient.createObjects = function () {
 	];
 
 	this.ground = new Quadrilateral(quad);
-  this.pacman = new Pacman_body(this.game.race.pacmanSize);
 
   this.walls = this.game.race.walls;
   this.cube = new Cube();

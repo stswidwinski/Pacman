@@ -4,19 +4,11 @@ PCENGClient.drawPacman = function(gl) {
   var stack = this.stack;
   var pacmanSize = this.game.race.pacmanSize;
   var pink = [1.0, 57/255.0, 143/255.0, 1.0];
+  var darkPink = [0.8, 89/255.0, 143/255.0, 1.0];
 
   stack.push();
   stack.multiply(this.myFrame());
   stack.multiply(SglMat4.translation([0, pacmanSize, 0]));
-
-  // draw the body of pacman
-  stack.push()
-  stack.multiply(SglMat4.rotationAngleAxis(sglDegToRad(-90), [1, 0 , 0]));
-  gl.uniformMatrix4fv(this.uniformShader.uModelViewMatrixLocation, false, stack.matrix);
-  this.drawObject(gl, this.pacman, pink, [0.1, 0.1, 0.1, 1.0]);
-  stack.pop();
-
-  // draw the eyes of pacman
 
   var that = this;
   var drawLayer = function(scale, angle, color) {
@@ -31,10 +23,12 @@ PCENGClient.drawPacman = function(gl) {
   var angle = ((this.time % 1500) / 1500.0 * 360);
   
   // draw the animated opening and closing mouth
+  drawLayer(2.0, -50, pink, pink)
+  drawLayer(2.0, 50, pink, pink)
   drawLayer(1.95, angle, [0, 0, 0, 1.0], [0, 0, 0, 1.0])
   drawLayer(1.95, -angle, [0, 0, 0, 1.0], [0, 0, 0, 1.0])
-  drawLayer(1.9, 0, [1.0, 1.0, 0.2, 1.0], [1.0, 1.0, 0.2, 1.0])
-  drawLayer(1.9, 180, [1.0, 1.0, 0.2, 1.0], [1.0, 1.0, 0.2, 1.0])
+  drawLayer(1.9, 0, darkPink, darkPink)
+  drawLayer(1.9, 180, darkPink, darkPink)
 
   stack.pop();
 }
