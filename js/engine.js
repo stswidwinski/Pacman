@@ -97,7 +97,6 @@ PCENGClient.createObjects = function () {
 
 PCENGClient.createBuffers = function (gl) {
 	this.createObjectBuffers(gl, this.ground);
-	this.createObjectBuffers(gl, this.pacman);
 	this.createObjectBuffers(gl, this.sphere);
   this.createObjectBuffers(gl, this.cube);
   this.createObjectBuffers(gl, this.halfsphere);
